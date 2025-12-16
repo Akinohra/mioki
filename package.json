@@ -1,6 +1,7 @@
 {
   "name": "mioki-root",
   "private": true,
+  "version": "0.0.0-snapshot.0",
   "packageManager": "pnpm@10.26.0",
   "description": "A simple OneBot v11 framework.",
   "keywords": [
@@ -20,5 +21,8 @@
     "printWidth": 120
   },
   "author": "Viki <hi@viki.moe> (https://github.com/vikiboss)",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "bumpp": "^10.3.2"
+  }
 }

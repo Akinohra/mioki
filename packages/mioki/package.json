@@ -1,6 +1,7 @@
 {
   "name": "mioki",
   "type": "module",
+  "version": "0.0.0-snapshot.0",
   "packageManager": "pnpm@10.26.0",
   "description": "A simple NapCat OneBot v11 framework.",
   "keywords": [
