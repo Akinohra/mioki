@@ -313,9 +313,11 @@ export class NapCat {
   }
 
   /**
-   * 注册事件监听器
+   * 注册事件监听器，支持主类型或者点分子类型
    *
-   * 如果需要移除监听器，调用 `off` 方法
+   * 如： `notice`、`message.private`、`request.group.invite` 等
+   *
+   * 如果需要移除监听器，请调用 `off` 方法
    */
   on<T extends keyof EventMap>(type: T, handler: (event: EventMap[NoInfer<T>]) => void) {
     this.logger.debug(`registering: ${String(type)}`)
@@ -330,7 +332,7 @@ export class NapCat {
     this.#event.off(type, handler)
   }
 
-  api<T extends any>(action: API, params: Record<string, any> = {}): Promise<T> {
+  api<T extends any>(action: API | (string & {}), params: Record<string, any> = {}): Promise<T> {
     this.#ensureWsConnection(this.#ws)
     this.logger.debug(`calling api action: ${action} with params: ${JSON.stringify(params)}`)
     const echo = this.#echoId()
