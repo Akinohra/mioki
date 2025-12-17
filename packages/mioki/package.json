@@ -10,6 +10,11 @@
     "framework",
     "bot"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vikiboss/mioki.git",
+    "directory": "packages/mioki"
+  },
   "scripts": {
     "dev": "tsdown -w",
     "build": "tsdown"

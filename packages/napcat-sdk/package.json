@@ -10,6 +10,11 @@
     "onebot v11",
     "sdk"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vikiboss/mioki.git",
+    "directory": "packages/napcat-sdk"
+  },
   "scripts": {
     "dev": "tsdown -w",
     "build": "tsdown"
