@@ -21,7 +21,7 @@ export const CONSOLE_LOGGER: Logger = Object.fromEntries(
   LOG_LEVEL_KEYS.map((level) => [
     level,
     (...args: unknown[]) => {
-      console[level === 'fatal' ? 'error' : level](...args)
+      console[level === 'fatal' ? 'error' : level === 'trace' ? 'debug' : level](...args)
     },
   ]),
 ) as Logger

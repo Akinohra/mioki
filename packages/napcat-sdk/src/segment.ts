@@ -1,6 +1,7 @@
-import type { NormalizedElement } from './onebot'
+import type { ExtractByType } from './types'
+import type { NormalizedElement as Element } from './onebot'
 
-function createDataSegment<T extends string, D>(type: T, data: D) {
+function createSegment<T extends string, D>(type: T, data: D) {
   return { type, ...data }
 }
 
@@ -9,17 +10,20 @@ function createDataSegment<T extends string, D>(type: T, data: D) {
  */
 export const segment = {
   /** 创建一个文本消息片段 */
-  text: (text: string): NormalizedElement => createDataSegment('text', { text }),
+  text: (text: string): Element => createSegment('text', { text }),
   /** 创建一个艾特消息片段 */
-  at: (qq: 'all' | (string & {})): NormalizedElement => createDataSegment('at', { qq }),
-  /** 创建一个回复消息片段 */
-  reply: (id: string): NormalizedElement => createDataSegment('reply', { id }),
-  /** 创建一个图片消息片段 */
-  image: (file: string): NormalizedElement => createDataSegment('image', { file }),
+  at: (qq: 'all' | (string & {})): Element => createSegment('at', { qq }),
   /** 创建一个 QQ 表情消息片段 */
-  face: (id: number): NormalizedElement => createDataSegment('face', { id }),
+  face: (id: number): Element => createSegment('face', { id }),
+  /** 创建一个回复消息片段 */
+  reply: (id: string): Element => createSegment('reply', { id }),
+  /** 创建一个图片消息片段 */
+  image: (file: string, options?: Omit<ExtractByType<Element, 'image'>, 'type' | 'file'>): Element =>
+    createSegment('image', { file, ...options }),
   /** 创建一个语音消息片段 */
-  record: (file: string): NormalizedElement => createDataSegment('record', { file }),
+  record: (file: string, options?: Omit<ExtractByType<Element, 'record'>, 'type' | 'file'>): Element =>
+    createSegment('record', { file, ...options }),
   /** 创建一个视频消息片段 */
-  video: (file: string): NormalizedElement => createDataSegment('video', { file }),
+  video: (file: string, options?: Omit<ExtractByType<Element, 'video'>, 'type' | 'file'>): Element =>
+    createSegment('video', { file, ...options }),
 }

@@ -15,6 +15,8 @@ export type OptionalKeys<T> = {
 
 export type OptionalProps<T> = Pick<T, OptionalKeys<T>>
 
+export type ExtractByType<T, K> = T extends { type: K } ? T : never
+
 export interface EventMap extends OneBotEventMap {
   'ws.open': void
   'ws.close': void

@@ -1,41 +1,30 @@
+export interface MediaProps {
+  url: string
+  path: string
+  file: (string & {}) | 'marketface'
+  file_id: string
+  file_size: string
+  file_unique: string
+}
+
 export type MessageElement =
   | { type: 'text'; text: string }
   | { type: 'at'; qq: 'all' | (string & {}) }
   | { type: 'reply'; id: string }
-  | {
-      type: 'image'
-      data: {
-        file: string
-        file_id: string
-        url: string
-        path: string
-        file_size: string
-        file_unique: string
-        summary?: string
-        sub_type?: string
-      }
-    }
   | { type: 'face'; id: number }
-  | { type: 'record'; file: string }
-  | { type: 'video'; file: string }
+  | ({ type: 'image'; summary?: string; sub_type?: string } & MediaProps)
+  | ({ type: 'record' } & MediaProps)
+  | ({ type: 'video' } & MediaProps)
 
 export type NormalizedElementToSend =
   | { type: 'text'; data: { text: string } }
-  | { type: 'at'; data: { qq: 'all' | (string & {}) } }
+  | { type: 'at'; data: { qq: 'all' | (string & {}) | number } }
   | { type: 'reply'; data: { id: string } }
-  | {
-      type: 'image'
-      data: {
-        name?: string
-        summary?: string
-        sub_type?: string
-        file: string
-      }
-    }
   | { type: 'face'; data: { id: number } }
   | { type: 'bface'; data: { id: number } }
-  | { type: 'record'; data: { file: string } }
-  | { type: 'video'; data: { file: string } }
+  | { type: 'image'; data: { file: string; name?: string; summary?: string; sub_type?: string } }
+  | { type: 'video'; data: { file: string; name?: string; thumb?: string } }
+  | { type: 'record'; data: { file: string; name?: string } }
 
 type FlattenData<T extends { type: string }> = T extends { data: infer U } ? U & { type: T['type'] } : never
 
@@ -44,14 +33,10 @@ export type NormalizedElement = FlattenData<NormalizedElementToSend>
 export type Sendable = string | NormalizedElement
 
 export type PostType = 'meta_event' | 'message'
-
-export type EventBase<T extends PostType, U extends object> = U & {
-  time: number
-  self_id: number
-  post_type: T
-}
-
 export type MetaEventType = 'heartbeat' | 'lifecycle'
+export type MessageType = 'private' | 'group'
+
+export type EventBase<T extends PostType, U extends object> = U & { time: number; self_id: number; post_type: T }
 
 export type MetaEventBase<T extends MetaEventType, U extends object> = U &
   EventBase<'meta_event', { meta_event_type: T }>
@@ -59,8 +44,6 @@ export type MetaEventBase<T extends MetaEventType, U extends object> = U &
 export type MetaEvent =
   | MetaEventBase<'heartbeat', { status: { online: boolean; good: boolean }; interval: number }>
   | MetaEventBase<'lifecycle', { sub_type: 'connect' | 'disconnect' }>
-
-export type MessageType = 'private' | 'group'
 
 type Reply = (sendable: Sendable | Sendable[], reply?: boolean) => Promise<{ message_id: string }>
 

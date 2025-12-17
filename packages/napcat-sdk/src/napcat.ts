@@ -57,7 +57,10 @@ export class NapCat {
   #normalizeSendable(msg: Sendable | Sendable[]): NormalizedElementToSend[] {
     return [msg].flat(2).map((item) => {
       if (typeof item === 'string') {
-        return { type: 'text', data: { text: item } } as NormalizedElementToSend
+        return { type: 'text', data: { text: item } }
+      }
+      if (item.type === 'at') {
+        return { type: 'at', data: { qq: String(item.qq) } }
       }
       const { type, ...data } = item
       return { type, data } as NormalizedElementToSend
