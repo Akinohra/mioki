@@ -8,4 +8,5 @@ export default defineConfig({
   treeshake: true,
   tsconfig: './tsconfig.json',
   format: ['cjs', 'esm'],
+  failOnWarn: false,
 })
