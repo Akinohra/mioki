@@ -28,9 +28,41 @@ Visit http://localhost:6099, and navigate to "Network Settings" to add a new Web
 
 <img src="./docs/napcat-ws-config.png" title="napcat-websocket" alt="napcat-websocket" style="width: 300px; max-width: 300px; border-radius: 4px; border: none;" />
 
-#### 2. WIP...
+### 2. Create a mioki Project
 
-> To be continued...
+```bash
+mkdir bot && cd bot
+npm init -y && npm install mioki
+echo "import('mioki').then(({ start }) => start())" > app.ts
+```
+
+### 3. Configure mioki
+
+Update `package.json` to add `mioki` field to configure mioki options.
+
+```json
+{
+  "mioki": {
+    "owners": [114514],
+    "admins": [],
+    "plugins": [],
+    "online_push": true,
+    "napcat": {
+      "protocol": "ws",
+      "host": "localhost",
+      "port": 3333,
+      "token": "your-napcat-token",
+    }
+  }
+}
+```
+
+### 4. Run the Bot
+
+```bash
+# or `bun app.ts`, `tsx app.ts`, etc.
+node app.ts 
+```
 
 ## Usage of NapCat SDK for TypeScript
 
