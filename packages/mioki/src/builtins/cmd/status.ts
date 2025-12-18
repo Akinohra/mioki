@@ -4,7 +4,7 @@ import pm from 'pretty-ms'
 import { BUILTIN_PLUGINS } from '..'
 import { filesize, localNum, systemInfo } from '../../utils'
 import { findLocalPlugins, runtimePlugins } from '../../plugin'
-import { version } from '../../../package.json'
+import { version } from '../../../package.json' with { type: 'json' }
 
 import type { NapCat } from 'napcat-sdk'
 
@@ -126,8 +126,8 @@ export async function getMiokiStatus(bot: NapCat): Promise<MiokiStatus> {
       protocol: versionInfo.protocol_version,
     },
     system: {
-      name: system.name,
-      version: system.version,
+      name: system.name || 'N/A',
+      version: system.version || 'N/A',
       arch: arch,
     },
     memory: {
@@ -141,7 +141,7 @@ export async function getMiokiStatus(bot: NapCat): Promise<MiokiStatus> {
     },
     disk: isInUnix ? await getDiskUsageInUnix() : { total: 0, used: 0, free: 0, percent: 0 },
     cpu: {
-      name: cpu.name,
+      name: cpu.name.trim(),
       count: cpu.count,
       percent: Number((await measureCpuUsage()).toFixed(1)),
     },
@@ -160,11 +160,11 @@ export async function getMiokiStatusStr(client: NapCat): Promise<string> {
 🧩 启用了 ${localNum(plugins.enabled)} 个插件，共 ${localNum(plugins.total)} 个
 🚀 ${filesize(memory.rss.used, { round: 1 })}/${memory.percent}%
 ⏳ 已运行 ${pm(stats.uptime, { hideYear: true, secondsDecimalDigits: 0 })}
-🤖 NapCat/${versions.napcat}-mioki/${versions.mioki}
+🤖 mioki/${versions.mioki}-NapCat/${versions.napcat}
 🖥️ ${system.name.split(' ')[0]}/${system.version.split('.')[0]}-${system.name}-node/${versions.node.split('.')[0]}
 📊 ${memory.percent}%-${filesize(memory.used, { base: 2, round: 1 })}/${filesize(memory.total, { base: 2, round: 1 })}
 🧮 ${cpu.percent}%-${cpu.name}-${cpu.count}核
-💾 ${diskValid ? diskDesc : 'N/A (不适用)'}
+${diskValid ? `💾 ${diskDesc}` : ''}
   `.trim()
 }
 
@@ -173,13 +173,7 @@ async function getDiskUsageInUnix(path = '/'): Promise<{ total: number; used: nu
     cp.exec(`df -k ${path} | tail -1 | awk '{print $2,$4}'`, (err, stdout) => {
       if (err) {
         console.error(err)
-
-        return resolve({
-          total: 0,
-          used: 0,
-          free: 0,
-          percent: 0,
-        })
+        return resolve({ total: 0, used: 0, free: 0, percent: 0 })
       }
 
       const [_total, _free] = stdout.trim().split(' ')

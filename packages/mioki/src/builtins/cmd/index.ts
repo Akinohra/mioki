@@ -3,7 +3,7 @@ import mri from 'mri'
 import path from 'node:path'
 import dedent from 'dedent'
 import { jiti, unique } from '../../utils'
-import { version } from '../../../package.json'
+import { version } from '../../../package.json' with { type: 'json' }
 import { string2argv } from 'string2argv'
 import { getMiokiStatus, MiokiStatus, getMiokiStatusStr } from './status'
 import { BOT_CWD, botConfig, updateBotConfig } from '../../config'
