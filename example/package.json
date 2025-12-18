@@ -15,7 +15,9 @@
       1141284758
     ],
     "admins": [],
-    "plugins": [],
+    "plugins": [
+      "hi"
+    ],
     "log_level": "info",
     "plugins_dir": "../plugins",
     "online_push": true,

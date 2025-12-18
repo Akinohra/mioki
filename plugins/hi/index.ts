@@ -5,16 +5,7 @@ export default definePlugin({
   version: '1.0.0', // optional
   priority: 10, // optional, default is 10
   description: 'A simple hi plugin', // optional
-  dependencies: [], // no extra dependencies, optional, default is []
   async setup(ctx) {
-    ctx.logger.info('plugin has been set up!')
-
-    ctx.logger.trace('trace')
-    ctx.logger.debug('debug')
-    ctx.logger.info('info')
-    ctx.logger.warn('warn')
-    ctx.logger.error('error')
-
     ctx.logger.info(`bot: ${ctx.bot.uin}, ${ctx.bot.nickname}`)
 
     const info = await ctx.bot.api<{ user_id: number; nickname: string }>('get_login_info')
