@@ -4,16 +4,16 @@ import path from 'node:path'
 import dedent from 'dedent'
 import { jiti, unique } from '../../utils'
 import { version } from '../../../package.json'
-import { miokiStatus, MiokiStatus, toMiokiStatus } from './status'
 import { string2argv } from 'string2argv'
+import { getMiokiStatus, MiokiStatus, getMiokiStatusStr } from './status'
 import { BOT_CWD, botConfig, updateBotConfig } from '../../config'
 import { definePlugin, enablePlugin, findLocalPlugins, runtimePlugins, type MiokiPlugin } from '../../plugin'
 
-const corePlugins = ['kivi-cmd', 'kivi-market']
+const corePlugins = ['mioki-cmd']
 
-export interface KiviCmdServiceContrib {
+export interface MiokiCmdServiceContrib {
   /** 获取框架和系统的实时状态 */
-  miokiStatus(): Promise<MiokiStatus>
+  getMiokiStatus(): Promise<MiokiStatus>
 }
 
 const cmd: MiokiPlugin = definePlugin({
@@ -22,10 +22,11 @@ const cmd: MiokiPlugin = definePlugin({
   priority: 1,
   setup(ctx) {
     const prefix = (ctx.botConfig.prefix ?? '#').replace(/[-_.^$?[\]{}]/g, '\\$&')
+
     const cmdPrefix = new RegExp(`^${prefix}`)
     const displayPrefix = prefix.replace(/\\\\/g, '\\')
 
-    ctx.addService('miokiStatus', () => miokiStatus(ctx.bot))
+    ctx.addService('miokiStatus', () => getMiokiStatus(ctx.bot))
 
     ctx.handle('message', (e) =>
       ctx.runWithErrorHandler(async () => {
@@ -34,8 +35,8 @@ const cmd: MiokiPlugin = definePlugin({
         if (!cmdPrefix.test(text)) return
 
         if (text.replace(cmdPrefix, '') === '状态') {
-          const status = await toMiokiStatus(ctx.bot)
-          await e.reply(`〓 🟢 KiviBot 状态 〓\n${status}`.trim())
+          const status = await getMiokiStatusStr(ctx.bot)
+          await e.reply(`〓 🟢 mioki 状态 〓\n${status}`.trim())
           return
         }
 
@@ -49,7 +50,7 @@ const cmd: MiokiPlugin = definePlugin({
           case '帮助': {
             await e.reply(
               dedent(`
-              〓 💡 KiviBot 帮助 〓
+              〓 💡 mioki 帮助 〓
               ${displayPrefix}插件 👉 框架插件管理
               ${displayPrefix}状态 👉 显示框架状态
               ${displayPrefix}设置 👉 框架设置管理
@@ -222,7 +223,7 @@ const cmd: MiokiPlugin = definePlugin({
               default: {
                 await e.reply(
                   dedent(`
-                  〓 🧩 KiviBot 插件 〓
+                  〓 🧩 mioki 插件 〓
                   ${displayPrefix}插件 列表
                   ${displayPrefix}插件 启用 <插件 ID>
                   ${displayPrefix}插件 禁用 <插件 ID>
@@ -346,7 +347,7 @@ const cmd: MiokiPlugin = definePlugin({
               default: {
                 await e.reply(
                   dedent(`
-                  〓 ⚙️ KiviBot 设置 〓
+                  〓 ⚙️ mioki 设置 〓
                   ${displayPrefix}设置 详情
                   ${displayPrefix}设置 [加/删]主人 <QQ/AT>
                   ${displayPrefix}设置 [加/删]管理 <QQ/AT>

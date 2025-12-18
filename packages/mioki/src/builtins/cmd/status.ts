@@ -78,7 +78,7 @@ export interface MiokiStatus {
   }
 }
 
-export async function miokiStatus(bot: NapCat): Promise<MiokiStatus> {
+export async function getMiokiStatus(bot: NapCat): Promise<MiokiStatus> {
   const osType = os.type()
   const osArch = os.arch()
   const isInUnix = ['Linux', 'Darwin'].includes(osType)
@@ -148,8 +148,8 @@ export async function miokiStatus(bot: NapCat): Promise<MiokiStatus> {
   }
 }
 
-export async function toMiokiStatus(client: NapCat): Promise<string> {
-  const { bot, plugins, stats, system, disk, cpu, memory, versions } = await miokiStatus(client)
+export async function getMiokiStatusStr(client: NapCat): Promise<string> {
+  const { bot, plugins, stats, system, disk, cpu, memory, versions } = await getMiokiStatus(client)
 
   const diskValid = disk.total > 0 && disk.free >= 0
   const diskDesc = `${disk.percent}%-${filesize(disk.used, { round: 1 })}/${filesize(disk.total, { round: 1 })}`

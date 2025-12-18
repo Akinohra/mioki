@@ -534,14 +534,23 @@ export class NapCat {
     return gkt & 0x7fffffff
   }
 
+  /**
+   * 获取 NapCat 原始 Cookie 相关信息
+   */
   getNapCatCookies(domain: string): Promise<{ cookies: string; bkn: string }> {
     return this.api<{ cookies: string; bkn: string }>('get_cookies', { domain })
   }
 
+  /**
+   * 获取版本信息
+   */
   getVersionInfo(): Promise<{ app_name: string; protocol_version: string; app_version: string }> {
     return this.api<{ app_name: string; protocol_version: string; app_version: string }>('get_version_info')
   }
 
+  /**
+   * 获取登录信息
+   */
   getLoginInfo(): Promise<{ user_id: number; nickname: string }> {
     return this.api<{ user_id: number; nickname: string }>('get_login_info')
   }
@@ -591,11 +600,17 @@ export class NapCat {
     return returns
   }
 
+  /**
+   * 通过域名获取 Pskey
+   */
   async getPskey(domain: string): Promise<string> {
     const { pskey } = await this.getCookie(domain)
     return pskey
   }
 
+  /**
+   * 获取 Bkn 值
+   */
   async getBkn(): Promise<string> {
     const { bkn } = await this.getCookie('vip.qq.com')
     return bkn
@@ -603,9 +618,9 @@ export class NapCat {
 
   /** 启动 NapCat SDK 实例，建立 WebSocket 连接 */
   async run(): Promise<void> {
-    const { logger: _, ...config } = this.#config
+    const { logger: _, token: __, ...config } = this.#config
 
-    this.logger.info(`bootstrap with config: ${JSON.stringify(config)}`)
+    this.logger.info(`run with config: ${JSON.stringify(config)}`)
 
     return new Promise<void>((resolve, reject) => {
       const ws = new WebSocket(this.#buildWsUrl())
@@ -642,7 +657,7 @@ export class NapCat {
       }
 
       ws.onopen = () => {
-        this.logger.info('connected')
+        this.logger.info('NapCat connected')
         this.#event.emit('ws.open')
         resolve()
       }

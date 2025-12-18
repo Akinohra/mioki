@@ -11,6 +11,7 @@ export interface MiokiConfig {
   admins: number[]
   plugins: string[]
   online_push?: boolean
+  log_level?: string
   napcat: {
     protocol?: 'ws' | 'wss'
     port?: number

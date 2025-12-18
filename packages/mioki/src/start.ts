@@ -7,6 +7,7 @@ import { version } from '../package.json'
 import { enablePlugin, runtimePlugins } from './plugin'
 import * as utils from './utils'
 import * as actions from './actions'
+import { getMiokiLogger } from './logger'
 import { BUILTIN_PLUGINS } from './builtins'
 
 import type { MiokiPlugin } from './plugin'
@@ -24,10 +25,17 @@ export async function start(options: StartOptions = {}): Promise<void> {
 
   process.title = `mioki v${version}`
 
-  const napcat = new NapCat(cfg.botConfig.napcat)
+  const logger = getMiokiLogger(cfg.botConfig.log_level || 'info')
+
+  logger.info(`>>> mioki v${version} 启动中，工作目录: ${cfg.BOT_CWD.value}`)
+
+  const napcat = new NapCat({
+    ...cfg.botConfig.napcat,
+    logger,
+  })
 
   napcat.on('napcat.connected', async ({ uin }) => {
-    console.log(`>>> 已连接到 NapCat 服务器，账号: ${uin}`)
+    logger.info(`>>> 已连接到 NapCat 服务器，账号: ${uin}`)
 
     let lastNoticeTime = 0
 
@@ -143,4 +151,6 @@ export async function start(options: StartOptions = {}): Promise<void> {
       await actions.noticeMainOwner(napcat, `✅ mioki v${version} 已就绪`)
     }
   })
+
+  await napcat.run()
 }

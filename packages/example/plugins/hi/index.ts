@@ -5,8 +5,10 @@ export default definePlugin({
   setup(ctx) {
     console.log('plugin has been set up!')
 
-    ctx.handle('message.private.group', async (e) => {
-      await e.reply('hi from plugin!')
+    ctx.handle('message.group', async (e) => {
+      if (e.raw_message === 'hi') {
+        await e.reply('hi from plugin!')
+      }
     })
 
     ctx.cron('*/1 * * * *', (ctx, now) => {
