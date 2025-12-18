@@ -45,7 +45,7 @@ Visit http://localhost:6099, and navigate to "Network Settings" to add a new Web
 ```bash
 mkdir bot && cd bot
 npm init -y && npm install mioki
-echo "import('mioki').then(({ start }) => start())" > app.ts
+echo "require('mioki').start({ cwd: __dirname })" > app.ts
 ```
 
 ### 2. Configure mioki
