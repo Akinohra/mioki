@@ -148,6 +148,11 @@ export async function enablePlugin(
     const clears = new Set<() => any>()
     const userClears = new Set<(() => any) | undefined | null>()
 
+    const logger = (bot.logger as ConsolaInstance).withDefaults({
+      tag: `plugin:${name}`,
+      args: [name],
+    })
+
     const context: MiokiContext = {
       bot,
       segment: bot.segment,
@@ -155,29 +160,47 @@ export async function enablePlugin(
       ...utilsExports,
       ...configExports,
       ...buildRemovedActions(bot),
-      logger: (bot.logger as ConsolaInstance).withDefaults({
-        tag: `plugin:${name}`,
-        args: [name],
-      }),
+      logger,
       services: servicesExports.services,
       clears: userClears,
       addService: (name: string, service: any, cover?: boolean) => {
-        const removeService = servicesExports.addService(name, service, cover)
+        logger.debug(`Adding service: ${name} (cover: ${cover ? 'yes' : 'no'})`)
+
+        const removeService = () => {
+          logger.debug(`Removing service: ${name}`)
+          servicesExports.addService(name, service, cover)
+        }
+
         clears.add(removeService)
+
         return removeService
       },
       handle: <EventName extends keyof EventMap>(
         eventName: EventName,
         handler: (event: EventMap[EventName]) => any,
       ) => {
+        logger.debug(`Registering event handler for event: ${String(eventName)}`)
+
         bot.on(eventName, handler)
-        const unsubscribe = () => bot.off(eventName, handler)
+
+        const unsubscribe = () => {
+          logger.debug(`Unregistering event handler for event: ${String(eventName)}`)
+          bot.off(eventName, handler)
+        }
+
         clears.add(unsubscribe)
+
         return unsubscribe
       },
       cron: (cronExpression, handler) => {
+        logger.debug(`Scheduling cron job: ${cronExpression}`)
         const job = nodeCron.schedule(cronExpression, (now) => handler(context, now))
-        const clear = () => job.stop()
+
+        const clear = () => {
+          logger.debug(`Stopping cron job: ${cronExpression}`)
+          job.stop()
+        }
+
         clears.add(clear)
         return job
       },
@@ -193,6 +216,7 @@ export async function enablePlugin(
       plugin,
       disable: async () => {
         try {
+          logger.debug(`Disabling plugin [${typeDesc}]${name}@${version}`)
           await Promise.all([...clears, ...userClears].map((fn) => fn?.()))
           runtimePlugins.delete(name)
         } catch (err: any) {

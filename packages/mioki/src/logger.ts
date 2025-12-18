@@ -51,13 +51,20 @@ export const getMiokiLogger = (level: LogLevel): ConsolaInstance => {
         log: (logObj) => {
           const message = logObj.message || logObj.args?.join(' ') || ''
           const prefix =
-            colors.gray(`[${logObj.date.toLocaleString('zh-CN')}]`) +
+            colors.gray(`[${logObj.date.toLocaleTimeString('zh-CN')}]`) +
             ' ' +
-            colors.blue(LEVEL_MAP[logObj.level]) +
+            colors.bold(colors.blue(LEVEL_MAP[logObj.level])) +
             ' ' +
-            (logObj.tag ? colors.green(`[${logObj.tag}] `) : '')
+            (logObj.tag ? colors.bold(colors.green(`[${logObj.tag}] `)) : '')
           const line = `${prefix}${message}`
-          console.log(line)
+
+          if (logObj.level <= LogLevels['info']) {
+            console.log(line)
+          } else if (logObj.level === LogLevels['warn']) {
+            console.warn(line)
+          } else {
+            console.debug(line)
+          }
         },
       },
     ],

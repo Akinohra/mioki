@@ -278,10 +278,14 @@ export class NapCat {
       switch (data.post_type) {
         case 'meta_event': {
           this.logger.trace(`received meta_event: ${JSON.stringify(data)}`)
+
           this.#event.emit('meta_event', data)
 
           if (data.meta_event_type) {
             this.#event.emit(`meta_event.${data.meta_event_type}`, data)
+
+            this.logger.debug('recv meta_event_type:', data.meta_event_type)
+
             if (data.sub_type) {
               if (data.sub_type === 'connect') {
                 this.#uin = data.self_id
@@ -317,6 +321,11 @@ export class NapCat {
           switch (data.message_type) {
             case 'private': {
               this.logger.trace(`received private message: ${JSON.stringify(data)}`)
+
+              this.logger.info(
+                `[P] ${data.nickname}(${data.user_id}): ${data.message.map((m: any) => (m.type === 'text' ? m.text : `[${m.type}]`)).join('')}`,
+              )
+
               this.#event.emit('message.private', data)
               this.#event.emit(`message.private.${data.sub_type}`, data)
 
@@ -325,6 +334,13 @@ export class NapCat {
 
             case 'group': {
               this.logger.trace(`received group message: ${JSON.stringify(data)}`)
+
+              this.logger.info(
+                `[G:${data.group_name}:${data.group_id}] ${data.nickname}(${data.user_id}): ${data.message
+                  .map((m: any) => (m.type === 'text' ? m.text : `[${m.type}]`))
+                  .join('')}`,
+              )
+
               this.#event.emit('message.group', data)
               this.#event.emit(`message.group.${data.sub_type}`, data)
 
@@ -673,7 +689,7 @@ export class NapCat {
 
       this.#ws = ws
 
-      this.logger.trace(`WebSocket instance created: ${this.#ws}`)
+      this.logger.trace(`WebSocket instance created.`)
     })
   }
 

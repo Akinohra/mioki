@@ -18,6 +18,7 @@
     "plugins": [
       "hi"
     ],
+    "log_level": "info",
     "plugins_dir": "../plugins",
     "online_push": true,
     "napcat": {
