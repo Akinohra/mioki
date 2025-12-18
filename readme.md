@@ -26,7 +26,7 @@ docker run -d \
 
 Visit http://localhost:6099, and navigate to "Network Settings" to add a new WebSocket server, using the `3001` port and `0.0.0.0` host in docker. Make sure to enable it after adding. Keep the token you set here, you'll need it to connect mioki to NapCat.
 
-<img src="./docs/napcat-ws-config.png" alt="napcat-websocket" style="max-width: 300px; border-radius: 4px;" />
+<img src="./docs/napcat-ws-config.png" alt="napcat-websocket" style="width: 300px; max-width: 300px; border-radius: 4px;" />
 
 #### 2. WIP...
 
