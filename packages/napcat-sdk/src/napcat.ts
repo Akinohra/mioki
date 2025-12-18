@@ -323,7 +323,7 @@ export class NapCat {
               this.logger.trace(`received private message: ${JSON.stringify(data)}`)
 
               this.logger.info(
-                `[P] ${data.nickname}(${data.user_id}): ${data.message.map((m: any) => (m.type === 'text' ? m.text : `[${m.type}]`)).join('')}`,
+                `[P] ${data.sender.nickname}(${data.sender.user_id}): ${data.message.map((m: any) => (m.type === 'text' ? m.text : `[${m.type}]`)).join('')}`,
               )
 
               this.#event.emit('message.private', data)
@@ -336,7 +336,7 @@ export class NapCat {
               this.logger.trace(`received group message: ${JSON.stringify(data)}`)
 
               this.logger.info(
-                `[G:${data.group_name}:${data.group_id}] ${data.nickname}(${data.user_id}): ${data.message
+                `[G:${data.group_name}:${data.group_id}] ${data.sender.nickname}(${data.sender.user_id}): ${data.message
                   .map((m: any) => (m.type === 'text' ? m.text : `[${m.type}]`))
                   .join('')}`,
               )

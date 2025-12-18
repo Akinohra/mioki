@@ -8,6 +8,7 @@ import * as utils from './utils'
 import * as actions from './actions'
 import { getMiokiLogger } from './logger'
 import { BUILTIN_PLUGINS } from './builtins'
+import { colors } from 'consola/utils'
 import { enablePlugin, ensurePluginDir, getAbsPluginDir, runtimePlugins } from './plugin'
 
 import type { MiokiPlugin } from './plugin'
@@ -28,9 +29,13 @@ export async function start(options: StartOptions = {}): Promise<void> {
   const logger = getMiokiLogger(cfg.botConfig.log_level || 'info')
   const plugin_dir = getAbsPluginDir()
 
-  logger.info(`>>> mioki v${version} 启动中`)
-  logger.info(`>>> 工作目录: ${cfg.BOT_CWD.value}`)
-  logger.info(`>>> 插件目录: ${plugin_dir}`)
+  logger.info(`>>> 〓 ${colors.bold(colors.cyan('mioki'))} ${colors.bold(colors.green(`v${version}`))} 〓`)
+  logger.info(`>>> ${colors.yellow(colors.underline(`基于 NapCat 的 TypeScript 🤖️ 机器人框架。`))}`)
+  logger.info(`>>> ${colors.yellow(colors.underline(`作者: Viki <hi@viki.moe> (https://github.com/vikiboss)`))}`)
+  logger.info(`>>> ${colors.yellow(colors.underline(`协议: Licensed under MIT License.`))}`)
+  logger.info(`>>> ${colors.cyan(colors.underline(`GitHub: http://github.com/vikiboss/mioki`))}`)
+  logger.info(`>>> 工作目录: ${colors.bold(colors.blue(cfg.BOT_CWD.value))}`)
+  logger.info(`>>> 插件目录: ${colors.bold(colors.blue(plugin_dir))}`)
 
   const napcat = new NapCat({
     ...cfg.botConfig.napcat,
@@ -38,7 +43,7 @@ export async function start(options: StartOptions = {}): Promise<void> {
   })
 
   napcat.on('napcat.connected', async ({ user_id, nickname }) => {
-    logger.info(`>>> 已连接到 NapCat: ${nickname} (${user_id})`)
+    logger.info(`>>> 已连接到 NapCat: ${colors.bold(colors.green(nickname))} (${colors.bold(colors.green(user_id))})`)
 
     let lastNoticeTime = 0
 
@@ -156,6 +161,8 @@ export async function start(options: StartOptions = {}): Promise<void> {
     napcat.logger.info(
       `>>> 成功加载了 ${runtimePlugins.size} 个插件。${failedInfo ? failedInfo : ''}总耗时 ${costTime} ms`,
     )
+
+    napcat.logger.info(`>>> mioki 启动完成！祝您使用愉快！🎉️`)
 
     if (cfg.botConfig.online_push) {
       await actions.noticeMainOwner(napcat, `✅ mioki v${version} 已就绪`).catch((err) => {

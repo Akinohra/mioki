@@ -9,6 +9,12 @@ export default definePlugin({
   async setup(ctx) {
     ctx.logger.info('plugin has been set up!')
 
+    ctx.logger.trace('trace')
+    ctx.logger.debug('debug')
+    ctx.logger.info('info')
+    ctx.logger.warn('warn')
+    ctx.logger.error('error')
+
     ctx.logger.info(`bot: ${ctx.bot.uin}, ${ctx.bot.nickname}`)
 
     const info = await ctx.bot.api<{ user_id: number; nickname: string }>('get_login_info')
@@ -38,7 +44,7 @@ export default definePlugin({
     })
 
     ctx.cron('*/3 * * * * *', (ctx, task) => {
-      ctx.logger.info(`cron task executed at ${task.date}`)
+      ctx.logger.warn(`cron task executed at ${task.date}`)
       // ctx.bot.sendPrivateMsg(ctx.botConfig.owners[0], 'hi from cron task!')
     })
 

@@ -2,18 +2,18 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { dayjs } from './utils'
 import { BOT_CWD } from './config'
-import { stripAnsi, colors } from 'consola/utils'
+import { stripAnsi, ColorName, colors } from 'consola/utils'
 import { createConsola, LogLevels, ConsolaInstance } from 'consola/core'
 
 import type { LogLevel } from 'napcat-sdk'
 
-const LEVEL_MAP: Record<number, string> = {
-  0: 'FATAL',
-  1: 'ERROR',
-  2: 'WARN',
-  3: 'INFO',
-  4: 'DEBUG',
-  5: 'TRACE',
+const LEVEL_MAP: Record<number, { name: string; color: ColorName }> = {
+  0: { name: 'ERROR', color: 'red' },
+  1: { name: 'WARN', color: 'yellow' },
+  2: { name: 'LOG', color: 'white' },
+  3: { name: 'INFO', color: 'green' },
+  4: { name: 'DEBUG', color: 'blue' },
+  5: { name: 'TRACE', color: 'gray' },
 }
 
 /**
@@ -42,7 +42,7 @@ export const getMiokiLogger = (level: LogLevel): ConsolaInstance => {
       {
         log: (logObj) => {
           const message = stripAnsi(logObj.message || logObj.args?.join(' ') || '')
-          const prefix = `[${logObj.date.toISOString()}] [${LEVEL_MAP[logObj.level]}] ${logObj.tag ? `[${logObj.tag}] ` : ''}`
+          const prefix = `[${logObj.date.toISOString()}] [${LEVEL_MAP[logObj.level].name}] ${logObj.tag ? `[${logObj.tag}] ` : ''}`
           const line = `${prefix}${message}`
           fs.appendFileSync(logFile, line + '\n')
         },
@@ -53,9 +53,9 @@ export const getMiokiLogger = (level: LogLevel): ConsolaInstance => {
           const prefix =
             colors.gray(`[${logObj.date.toLocaleTimeString('zh-CN')}]`) +
             ' ' +
-            colors.bold(colors.blue(LEVEL_MAP[logObj.level])) +
+            colors.bold(colors[LEVEL_MAP[logObj.level].color](LEVEL_MAP[logObj.level].name)) +
             ' ' +
-            (logObj.tag ? colors.bold(colors.green(`[${logObj.tag}] `)) : '')
+            (logObj.tag ? colors.bold(colors.dim(`[${logObj.tag}] `)) : '')
           const line = `${prefix}${message}`
 
           if (logObj.level <= LogLevels['info']) {
