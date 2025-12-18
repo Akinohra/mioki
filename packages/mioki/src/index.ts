@@ -1,3 +1,7 @@
 export * from './logger'
 export * from './start'
 export * from './plugin'
+export * from './actions'
+export * from './config'
+export * from './services'
+export * from './utils'
