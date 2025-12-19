@@ -27,27 +27,32 @@ export default defineConfig({
       // },
     ],
     nav: [
-      { text: '文档', link: '/intro' },
+      { text: 'mioki', link: '/intro' },
+      { text: 'NapCat SDK', link: '/napcat-sdk' },
       { text: '支持', link: '/reward' },
     ],
     sidebar: [
       {
+        text: '指南',
         items: [
           { text: '简介', link: '/intro' },
           { text: '快速开始', link: '/start' },
-          { text: '编写插件', link: '/plugin' },
+          { text: '插件入门', link: '/plugin' },
         ],
       },
       {
+        text: 'mioki',
         items: [
-          { text: 'mioki 事件', link: '/mioki/event' },
+          { text: '插件进阶', link: '/mioki/plugin' },
           { text: 'mioki API', link: '/mioki/api' },
         ],
       },
       {
+        text: 'NapCat SDK',
         items: [
-          { text: 'NapCat SDK', link: '/napcat-sdk' },
-          { text: 'NapCat 事件', link: '/napcat-sdk/event' },
+          { text: '概览', link: '/napcat-sdk' },
+          { text: 'API 参考', link: '/napcat-sdk/api' },
+          { text: '事件', link: '/napcat-sdk/event' },
         ],
       },
     ],

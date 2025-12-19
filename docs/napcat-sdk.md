@@ -1,3 +1,0 @@
-# NapCat SDK
-
-sss
