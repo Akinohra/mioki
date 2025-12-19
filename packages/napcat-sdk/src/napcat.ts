@@ -94,6 +94,8 @@ export class NapCat {
 
   /**
    * 机器人 QQ 号
+   *
+   * @deprecated 建议使用 `uin` 属性
    */
   get user_id(): number {
     return this.uin
@@ -120,7 +122,8 @@ export class NapCat {
 
   /** 构建 WebSocket 连接地址 */
   #buildWsUrl(): string {
-    return `${this.#config.protocol}://${this.#config.host}:${this.#config.port}?access_token=${this.#config.token}`
+    const { protocol, host, port, token } = this.#config
+    return `${protocol}://${host}:${port}?access_token=${token}`
   }
 
   /** 包装回复消息 */
@@ -148,7 +151,7 @@ export class NapCat {
   }
 
   /** 标准化可发送消息元素 */
-  #normalizeSendable(msg: Sendable | Sendable[]): NormalizedElementToSend[] {
+  normalizeSendable(msg: Sendable | Sendable[]): NormalizedElementToSend[] {
     return [msg].flat(2).map((item) => {
       if (typeof item === 'string') {
         return { type: 'text', data: { text: item } }
@@ -302,7 +305,7 @@ export class NapCat {
                   app_name,
                   app_version,
                   protocol_version,
-                  ts: data.time * 1000,
+                  timestamp: data.time * 1000,
                 })
               }
 
@@ -559,7 +562,7 @@ export class NapCat {
   sendPrivateMsg(user_id: number, sendable: Sendable | Sendable[]): Promise<{ message_id: number }> {
     return this.api<{ message_id: number }>('send_private_msg', {
       user_id,
-      message: this.#normalizeSendable(sendable),
+      message: this.normalizeSendable(sendable),
     })
   }
 
@@ -569,7 +572,7 @@ export class NapCat {
   sendGroupMsg(group_id: number, sendable: Sendable | Sendable[]): Promise<{ message_id: number }> {
     return this.api<{ message_id: number }>('send_group_msg', {
       group_id,
-      message: this.#normalizeSendable(sendable),
+      message: this.normalizeSendable(sendable),
     })
   }
 

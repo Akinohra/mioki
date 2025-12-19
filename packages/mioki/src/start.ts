@@ -20,7 +20,7 @@ export async function start(options: StartOptions = {}): Promise<void> {
   const { cwd = process.cwd() } = options
 
   if (cwd !== cfg.BOT_CWD.value) {
-    cfg.updateBotCWD(cwd)
+    cfg.updateBotCWD(path.resolve(cwd))
   }
 
   process.title = `mioki v${version}`
@@ -43,7 +43,7 @@ export async function start(options: StartOptions = {}): Promise<void> {
 
   const { protocol = 'ws', port = 6700, host = 'localhost', token } = cfg.botConfig.napcat || {}
 
-  logger.info(`开始连接 NapCat 实例: ${colors.green(`${protocol}://${host}:${port}`)}`)
+  logger.info(`>>> 正在连接 NapCat 实例: ${colors.green(`${protocol}://${host}:${port}`)}`)
 
   const napcat = new NapCat({
     token,
@@ -55,10 +55,13 @@ export async function start(options: StartOptions = {}): Promise<void> {
 
   napcat.on('ws.close', () => {
     logger.error('连接已关闭，请确保 NapCat 实例正常运行及 token 配置正确')
+    process.exit(1)
   })
 
   napcat.on('napcat.connected', async ({ user_id, nickname, app_name, app_version }) => {
-    logger.info(`已连接到 NapCat 实例: ${colors.green(`${app_name}-v${app_version}-${nickname}(${user_id})`)}`)
+    logger.info(`已连接到 NapCat 实例: ${colors.green(`${app_name}-v${app_version} ${nickname}(${user_id})`)}`)
+
+    process.title = `mioki v${version} ${app_name}-v${app_version}-${user_id}`
 
     let lastNoticeTime = 0
 
@@ -142,7 +145,7 @@ export async function start(options: StartOptions = {}): Promise<void> {
 
     try {
       // 加载内置插件
-      napcat.logger.info(`加载内置插件: ${BUILTIN_PLUGINS.map((p) => colors.cyan(p.name)).join(', ')}`)
+      napcat.logger.info(`>>> 加载 mioki 内置插件: ${BUILTIN_PLUGINS.map((p) => colors.cyan(p.name)).join(', ')}`)
       await Promise.all(BUILTIN_PLUGINS.map((p) => enablePlugin(napcat, p, 'builtin')))
 
       // 按优先级分组并行加载用户插件，相同优先级的插件可以并行加载

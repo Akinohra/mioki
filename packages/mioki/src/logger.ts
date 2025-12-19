@@ -3,9 +3,9 @@ import path from 'node:path'
 import { dayjs } from './utils'
 import { BOT_CWD, botConfig } from './config'
 import { stripAnsi, ColorName, colors } from 'consola/utils'
-import { createConsola, LogLevels, ConsolaInstance } from 'consola/core'
+import { createConsola, LogLevels } from 'consola/core'
 
-import type { LogLevel } from 'napcat-sdk'
+import type { Logger, LogLevel } from 'napcat-sdk'
 
 const LEVEL_MAP: Record<number, { name: string; color: ColorName }> = {
   0: { name: 'ERROR', color: 'red' },
@@ -16,7 +16,7 @@ const LEVEL_MAP: Record<number, { name: string; color: ColorName }> = {
   5: { name: 'TRACE', color: 'gray' },
 }
 
-export const logger: ConsolaInstance = getMiokiLogger(botConfig.log_level || 'info')
+export const logger: Logger = getMiokiLogger(botConfig.log_level || 'info')
 
 /**
  * 获取日志文件名
@@ -26,7 +26,7 @@ export function getLogFilePath(type: string = ''): string {
   return path.join(BOT_CWD.value, `logs/${startTime}${type ? '.' + type : ''}.log`)
 }
 
-export function getMiokiLogger(level: LogLevel): ConsolaInstance {
+export function getMiokiLogger(level: LogLevel): Logger {
   const logDir = path.join(BOT_CWD.value, 'logs')
 
   if (!fs.existsSync(logDir)) {
@@ -51,19 +51,21 @@ export function getMiokiLogger(level: LogLevel): ConsolaInstance {
       },
       {
         log: (logObj) => {
+          const time = colors.gray(`[${logObj.date.toLocaleTimeString('zh-CN')}]`)
+          const level = colors.bold(colors[LEVEL_MAP[logObj.level].color](LEVEL_MAP[logObj.level].name))
+          const tag = logObj.tag ? colors.dim(`[${logObj.tag}] `) : ''
           const message = logObj.message || logObj.args?.join(' ') || ''
-          const prefix =
-            colors.gray(`[${logObj.date.toLocaleTimeString('zh-CN')}]`) +
-            ' ' +
-            colors.bold(colors[LEVEL_MAP[logObj.level].color](LEVEL_MAP[logObj.level].name)) +
-            ' ' +
-            (logObj.tag ? colors.dim(`[${logObj.tag}] `) : '')
-          const line = `${prefix}${message}`
 
-          if (logObj.level <= LogLevels['info']) {
-            console.log(line)
+          const line = `${time} ${level} ${tag} ${message}`
+
+          if (logObj.level <= LogLevels['error']) {
+            console.error(line)
           } else if (logObj.level === LogLevels['warn']) {
             console.warn(line)
+          } else if (logObj.level === LogLevels['log']) {
+            console.log(line)
+          } else if (logObj.level === LogLevels['info']) {
+            console.info(line)
           } else {
             console.debug(line)
           }

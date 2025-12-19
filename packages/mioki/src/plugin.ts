@@ -9,7 +9,7 @@ import * as configExports from './config'
 import * as actionsExports from './actions'
 import * as servicesExports from './services'
 
-import type { EventMap, NapCat } from 'napcat-sdk'
+import type { EventMap, Logger, NapCat } from 'napcat-sdk'
 import type { ScheduledTask, TaskContext } from 'node-cron'
 import type { ConsolaInstance } from 'consola/core'
 
@@ -62,7 +62,7 @@ export interface MiokiContext extends Services, Configs, Utils, RemoveBotParam<A
   /** 待清理的函数集合，在插件卸载时会被调用 */
   clears: Set<(() => any) | null | undefined>
   /** 日志器 */
-  logger: ConsolaInstance
+  logger: Logger
 }
 
 export const runtimePlugins: Map<
@@ -232,11 +232,11 @@ export async function enablePlugin(
     const time = Math.round(Number(end - start)) / 1_000_000
 
     bot.logger.info(
-      `启用插件 ${colors.yellow(`[${typeDesc}]`)}${colors.yellow(`${name}@${version}`)} => 耗时 ${colors.green(time.toFixed(2))} ms`,
+      `- 启用插件 ${colors.yellow(`[${typeDesc}]`)} ${colors.yellow(`${name}@${version}`)} => 耗时 ${colors.green(time.toFixed(2))} 毫秒`,
     )
   } catch (e: any) {
     throw new Error(
-      `启用插件 ${colors.yellow(`[${typeDesc}]`)}${colors.yellow(`${name}@${version}`)} 失败: ${e?.message}`,
+      `启用插件 ${colors.yellow(`[${typeDesc}]`)} ${colors.yellow(`${name}@${version}`)} 失败: ${e?.message}`,
     )
   }
 

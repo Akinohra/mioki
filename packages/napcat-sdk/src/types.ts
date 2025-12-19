@@ -39,7 +39,7 @@ export interface EventMap extends OneBotEventMap {
     app_name: string
     app_version: string
     protocol_version: string
-    ts: number
+    timestamp: number
   }
 }
 
