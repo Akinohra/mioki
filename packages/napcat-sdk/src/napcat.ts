@@ -589,6 +589,13 @@ export class NapCat {
   }
 
   /**
+   * 给好友名片点赞
+   */
+  sendLike(user_id: number, times: number = 1): Promise<void> {
+    return this.api<void>('send_like', { user_id, times })
+  }
+
+  /**
    * 获取好友列表
    */
   async getFriendList(): Promise<(Friend & Record<string, any>)[]> {
