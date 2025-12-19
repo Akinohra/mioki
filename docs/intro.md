@@ -7,10 +7,6 @@
   <img src="https://shields.io/npm/dm/mioki?label=downloads&style=flat-square" title="npm-download" alt="npm-download" class="inline"/>
 </div>
 
-::: warning 请注意
-框架仍处于**活跃开发阶段**，API 可能发生较大更改，请勿用于生产环境。
-:::
-
 `mioki` 是基于 [NapCat](https://napneko.github.io/) 的插件式 [OneBot](onebot.dev) 机器人框架，[KiviBot](https://b.viki.moe) 的精神继任者。
 
 mioki 继承了 KiviBot 的轻量、优雅和易用的设计理念，并在此基础上替换了底层通信库为 NapCat SDK，提供了更现代化的 TypeScript 支持和更强大的功能扩展能力。
