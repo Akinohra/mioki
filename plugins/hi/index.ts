@@ -26,7 +26,7 @@ export default definePlugin({
       }
 
       // e.recall()
-      // e.addEssence()
+      // e.setEssence()
       // e.addReaction('66')
       // const quoteMsg = await e.getQuoteMessage()
       // const text = await ctx.getQuoteText(e)

@@ -120,7 +120,7 @@ napcat.on('message', (event) => {
 // you can also listen to specific message sub-types
 napcat.on('message.group', async (event) => {
   // some methods of a message event are available
-  await event.addEssence(event.message_id)
+  await event.setEssence(event.message_id)
   await event.recall()
 
   // You can also interact with group instance to do some operations
