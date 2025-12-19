@@ -13,6 +13,7 @@ export interface MiokiConfig {
   owners: number[]
   admins: number[]
   plugins: string[]
+  error_push?: boolean
   online_push?: boolean
   log_level?: LogLevel
   plugins_dir?: string

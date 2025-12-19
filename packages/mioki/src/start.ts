@@ -68,22 +68,29 @@ export async function start(options: StartOptions = {}): Promise<void> {
     process.on('uncaughtException', async (err: any) => {
       const msg = utils.stringifyError(err)
       napcat.logger.error(`uncaughtException, 出错了: ${msg}`)
-      if (Date.now() - lastNoticeTime < 1_000) return
-      lastNoticeTime = Date.now()
-      await actions.noticeMainOwner(napcat, `mioki 发生未捕获异常:\n\n${msg}`).catch(() => {
-        napcat.logger.error('发送未捕获异常通知失败')
-      })
+
+      if (cfg.botConfig.error_push) {
+        if (Date.now() - lastNoticeTime < 1_000) return
+        lastNoticeTime = Date.now()
+        await actions.noticeMainOwner(napcat, `mioki 发生未捕获异常:\n\n${msg}`).catch(() => {
+          napcat.logger.error('发送未捕获异常通知失败')
+        })
+      }
     })
 
     process.on('unhandledRejection', async (err: any) => {
       const msg = utils.stringifyError(err)
       napcat.logger.error(`unhandledRejection, 出错了: ${msg}`)
-      if (Date.now() - lastNoticeTime < 1_000) return
-      lastNoticeTime = Date.now()
-      const date = new Date().toLocaleString()
-      await actions.noticeMainOwner(napcat, `【${date}】\n\nmioki 发生未处理异常:\n\n${msg}`).catch(() => {
-        napcat.logger.error('发送未处理异常通知失败')
-      })
+
+      if (cfg.botConfig.error_push) {
+        if (Date.now() - lastNoticeTime < 1_000) return
+        lastNoticeTime = Date.now()
+        const date = new Date().toLocaleString()
+
+        await actions.noticeMainOwner(napcat, `【${date}】\n\nmioki 发生未处理异常:\n\n${msg}`).catch(() => {
+          napcat.logger.error('发送未处理异常通知失败')
+        })
+      }
     })
 
     ensurePluginDir()
