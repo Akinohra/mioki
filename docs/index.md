@@ -1,29 +1,29 @@
 ---
 layout: home
 titleTemplate: 能跑就行 の Bot
-description: 能跑就行 の Bot
+description: 基于 NapCat 的插件式 OneBot 机器人框架，KiviBot 的精神继承者。
 head:
   - - meta
     - name: description
-      content: 能跑就行 の Bot
+      content: 💓 基于 NapCat 的插件式 OneBot 机器人框架，KiviBot 的精神继承者。
 hero:
-  name: KiviBot
-  text: 能跑就行 の Bot
-  tagline: 站在巨人的肩膀上：Node.js、oicq v2
+  name: mioki
+  text: KiviBot 的精神继承者
+  tagline: 基于 NapCat 的 OneBot QQ 机器人框架
   image:
-    src: /dimo.png
-    alt: KiviBot
+    src: /logo.png
+    alt: mioki
   actions:
     - theme: brand
       text: 快速上手
       link: /intro
 features:
   - title: 优雅、注重体验
-    details: 全平台协议支持, 使用 QQ 消息配置框架, 一条消息即可安装、启用、升级插件, 极致的用户体验
+    details: 使用 QQ 消息配置框架，一条消息即可控制插件，极致的用户体验
   - title: 轻量、高效
-    details: 无需额外运行 UI 界面, 内存占用低, 开发语言与底层协议一致, 由 node 驱动, 依赖少执行效率高
+    details: 无需额外运行 UI，内存占用低，由 Node.js 驱动，依赖少，执行效率高
   - title: 跨平台
-    details: 不仅在 Windows, Linux 平台能运行, 手机, 平板, 甚至家用路由器和刷了 Linux 的随身 WiFi 都能运行
+    details: 支持主流 Windows、Linux、macOS、安卓及路由器等多种平台
   - title: 开发者友好
-    details: 支持 JS/TS 语言, 只需几行代码就能编写插件, 支持热重载, 拥有友好的脚手架与完备的 TS 类型定义
+    details: 几行代码编写插件，支持热重载、完备的 TypeScript 类型定义
 ---

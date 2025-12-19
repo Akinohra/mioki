@@ -4,7 +4,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'mioki',
   lang: 'zh-CN',
-  description: '💓 基于 NapCat 的简单 OneBot 机器人框架，KiviBot 的精神继承者。',
+  description: '💓 基于 NapCat 的插件式 OneBot 机器人框架，KiviBot 的精神继承者。',
   head: [
     ['link', { rel: 'preconnect', href: 'https://unpkg.com' }],
     ['link', { rel: 'dns-prefetch', href: 'https://unpkg.com' }],
@@ -95,6 +95,10 @@ export default defineConfig({
     docFooter: {
       prev: '上一页',
       next: '下一页',
+    },
+    footer: {
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 2025-present Viki',
     },
   },
 })

@@ -1,8 +1,8 @@
 # mioki
 
-💓 A simple OneBot bot framework for NapCat, successor of KiviBot.
+💓 A pluggable OneBot bot framework for NapCat, successor of KiviBot.
 
-<img src="./docs/images/demo.png" title="demo" alt="demo" style="max-width: 640px; border-radius: 4px; border: none;" />
+<img src="./docs/public/demo.png" title="demo" alt="demo" style="max-width: 640px; border-radius: 4px; border: none;" />
 
 > [!CAUTION]
 > This project is still under active development. Use it at your own risk.
@@ -36,7 +36,7 @@ docker run -d \
 
 Visit http://localhost:6099, and navigate to "Network Settings" to add a new WebSocket server, using the `3001` port and `0.0.0.0` host in docker. Make sure to enable it after adding. Keep the token you set here, you'll need it to connect mioki to NapCat.
 
-<img src="./docs/images/napcat-ws-config.png" title="napcat-websocket" alt="napcat-websocket" style="width: 300px; max-width: 300px; border-radius: 4px; border: none;" />
+<img src="./docs/public/napcat-ws-config.png" title="napcat-websocket" alt="napcat-websocket" style="width: 300px; max-width: 300px; border-radius: 4px; border: none;" />
 
 ## Usage of mioki
 
