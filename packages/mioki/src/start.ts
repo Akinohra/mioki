@@ -28,7 +28,7 @@ export async function start(options: StartOptions = {}): Promise<void> {
   const plugin_dir = getAbsPluginDir()
 
   logger.info(colors.dim('='.repeat(40)))
-  logger.info(`欢迎使用 ${colors.bold(colors.cyan('mioki'))} 💓 ${colors.bold(colors.green(`v${version}`))}`)
+  logger.info(`欢迎使用 ${colors.bold(colors.redBright('mioki'))} 💓 ${colors.bold(colors.cyan(`v${version}`))}`)
   logger.info(colors.yellow(colors.underline(`一个基于 NapCat 的插件式 QQ 机器人框架`)))
   logger.info(colors.cyan(`轻量 * 跨平台 * 插件式 * 热重载 * 注重开发体验`))
   logger.info(colors.dim('='.repeat(40)))
