@@ -4,11 +4,6 @@
 
 💓 一个基于 NapCat 的插件式 OneBot 机器人框架，KiviBot 的精神继任者。
 
-<img src="./docs/public/demo.png" title="demo" alt="demo" style="max-width: 400px; border-radius: 4px; border: none;" />
-
-> [!注意]
-> 本项目仍在积极开发中，使用需自担风险。
-
 ## 文档
 
 前往 [mioki 文档](https://mioki.viki.moe/) 获取完整文档和使用指南。
