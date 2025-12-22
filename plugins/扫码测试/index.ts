@@ -7,6 +7,9 @@ export default definePlugin({
   setup(ctx) {
     ctx.handle('message.group', async (e) => {
       const text = ctx.text(e)
+
+      ctx.logger.info(`services: ${JSON.stringify(ctx.services)}`)
+
       const { QRLogin, qrLogin, loginMiniProgram } = ctx.services.login
 
       if (text === '登录会员') {

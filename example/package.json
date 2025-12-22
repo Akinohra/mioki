@@ -15,14 +15,16 @@
     ],
     "admins": [],
     "plugins": [
+      "扫码测试",
       "like",
+      "qr-login",
       "test",
       "words"
     ],
-    "log_level": "info",
+    "log_level": "trace",
     "plugins_dir": "../plugins",
     "online_push": true,
-    "error_push": true,
+    "error_push": false,
     "napcat": {
       "protocol": "ws",
       "port": 3333,

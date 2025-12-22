@@ -165,16 +165,9 @@ export async function enablePlugin(
       services: servicesExports.services,
       clears: userClears,
       addService: (name: string, service: any, cover?: boolean) => {
-        logger.debug(`Adding service: ${name} (cover: ${cover ? 'yes' : 'no'})`)
-
-        const removeService = () => {
-          logger.debug(`Removing service: ${name}`)
-          servicesExports.addService(name, service, cover)
-        }
-
-        clears.add(removeService)
-
-        return removeService
+        const remove = servicesExports.addService(name, service, cover)
+        clears.add(remove)
+        return remove
       },
       handle: <EventName extends keyof EventMap>(
         eventName: EventName,

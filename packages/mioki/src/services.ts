@@ -1,3 +1,5 @@
+import { logger } from './logger'
+
 import type { MiokiCoreServiceContrib } from './builtins/core'
 
 export interface MiokiServices extends Record<string, unknown>, MiokiCoreServiceContrib {}
@@ -17,9 +19,15 @@ export const services: MiokiServices = USER_SERVICE
  * 建议需要调用 `addService` 的插件设置 `priority` 为 `10`
  */
 export function addService(name: string, service: any, cover: boolean = true): () => void {
+  logger.debug(`添加 mioki 服务: ${name} (覆盖: ${cover ? '是' : '否'})`)
+
   if (cover || !USER_SERVICE[name]) {
     USER_SERVICE[name] = service
   }
 
-  return () => (USER_SERVICE[name] = undefined)
+  return () => {
+    logger.debug(`移除 mioki 服务: ${name}`)
+
+    USER_SERVICE[name] = undefined
+  }
 }
