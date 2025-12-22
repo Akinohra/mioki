@@ -34,8 +34,8 @@ export default definePlugin({
     })
 
     // ctx.cron('*/3 * * * * *', (ctx, task) => {
-    // ctx.logger.warn(`cron task executed at ${task.date}`)
-    // ctx.bot.sendPrivateMsg(ctx.botConfig.owners[0], 'hi from cron task!')
+    //   ctx.logger.warn(`cron task executed at ${task.date}`)
+    //   ctx.bot.sendPrivateMsg(ctx.botConfig.owners[0], 'hi from cron task!')
     // })
 
     return () => {

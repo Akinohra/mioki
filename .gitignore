@@ -3,6 +3,7 @@ node_modules
 dist
 logs
 
+bot
 **/plugins/**/.browser-data
 
 # VitePress build output

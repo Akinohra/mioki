@@ -45,3 +45,6 @@ jobs:
         run: npx changelogithub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync NPM Mirror
+        run: "curl -X 'PUT' 'https://registry-direct.npmmirror.com/-/package/mioki/syncs'"
