@@ -208,7 +208,7 @@ napcat.on('message', async (event) => {
 
   // 获取引用的消息
   if (event.quote_id) {
-    const quoteMsg = await event.getQuoteMessage()
+    const quoteMsg = await event.getQuoteMsg()
     if (quoteMsg) {
       console.log('引用的消息:', quoteMsg.raw_message)
     }

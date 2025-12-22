@@ -531,7 +531,7 @@ export function getGroupAvatarLink(group: number, size = 640) {
 const messageCacheMap = new Map<string, GroupMessageEvent | PrivateMessageEvent | 'loading' | null>()
 
 /** 获取引用回复的消息 */
-export async function getQuoteMessage(
+export async function getQuoteMsg(
   event: MessageEvent,
   timeout = 3_000,
 ): Promise<GroupMessageEvent | PrivateMessageEvent | null> {
@@ -570,7 +570,7 @@ export async function getQuoteMessage(
   // 开始获取
   messageCacheMap.set(key, 'loading')
 
-  const msg = await event.getQuoteMessage()
+  const msg = await event.getQuoteMsg()
 
   // 如果缓存达到阈值则清空
   if (messageCacheMap.size > 100) messageCacheMap.clear()
@@ -608,7 +608,7 @@ export async function getImageUrl(event: HasMessage): Promise<string> {
  * 获取引用回复的消息中的图片链接
  */
 export async function getQuoteImageUrl(event: MessageEvent): Promise<string> {
-  const quoteMsg = await getQuoteMessage(event)
+  const quoteMsg = await getQuoteMsg(event)
   if (!quoteMsg) return ''
   return await getImageUrl(quoteMsg)
 }
@@ -631,7 +631,7 @@ export function getImage(event: HasMessage): RecvImageElement | null {
  * 获取引用回复的图片消息
  */
 export async function getQuoteImage(event: MessageEvent): Promise<RecvImageElement | null> {
-  const quoteMsg = await getQuoteMessage(event)
+  const quoteMsg = await getQuoteMsg(event)
   if (quoteMsg) {
     return find(quoteMsg.message, 'image') || null
   }
@@ -682,7 +682,7 @@ export function text(
  * 获取回复的消息中的文本内容
  */
 export async function getQuoteText(event: MessageEvent): Promise<string> {
-  const msg = await getQuoteMessage(event)
+  const msg = await getQuoteMsg(event)
   if (!msg) return ''
   return text(msg)
 }
@@ -691,7 +691,7 @@ export async function getQuoteText(event: MessageEvent): Promise<string> {
  * 获取提到的用户 QQ 号，可以通过 if(!qq) 判断是否提到了用户，返回 0 代表没有提到用户
  */
 export async function getMentionedUserId(event: MessageEvent): Promise<number | 0> {
-  const quoteId = (await getQuoteMessage(event))?.sender.user_id || 0
+  const quoteId = (await getQuoteMsg(event))?.sender.user_id || 0
   const msgAtId = +(find(event.message, 'at')?.qq || 0)
   return Number.isNaN(msgAtId) || !msgAtId ? quoteId : msgAtId
 }

@@ -733,7 +733,7 @@ export type PrivateMessageEvent = MessageEventBase<
     /** 好友信息对象 */
     friend: Friend
     /** 获取引用的消息 */
-    getQuoteMessage: () => Promise<PrivateMessageEvent | null>
+    getQuoteMsg: () => Promise<PrivateMessageEvent | null>
     /** 发送者信息 */
     sender: {
       /** 发送者 QQ 号 */
@@ -766,7 +766,7 @@ export type GroupMessageEvent = MessageEventBase<
     /** 删除消息表态 */
     delReaction: ReactionAction
     /** 获取引用的消息 */
-    getQuoteMessage: () => Promise<GroupMessageEvent | null>
+    getQuoteMsg: () => Promise<GroupMessageEvent | null>
     /** 设置精华消息 */
     setEssence: () => Promise<void>
     /** 删除精华消息 */

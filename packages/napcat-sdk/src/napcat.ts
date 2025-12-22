@@ -256,7 +256,7 @@ export class NapCat {
     return {
       ...event,
       quote_id,
-      getQuoteMessage: () => this.getMsg(quote_id) as Promise<PrivateMessageEvent | null>,
+      getQuoteMsg: () => this.getMsg(quote_id) as Promise<PrivateMessageEvent | null>,
       message: this.#transformOneBotMessage(event.message),
       friend: this.#buildFriend(target.user_id, target.nickname),
       reply: (sendable: Sendable | Sendable[], reply = false) =>
@@ -275,7 +275,7 @@ export class NapCat {
     return {
       ...event,
       quote_id,
-      getQuoteMessage: () => this.getMsg(quote_id) as Promise<GroupMessageEvent | null>,
+      getQuoteMsg: () => this.getMsg(quote_id) as Promise<GroupMessageEvent | null>,
       getSenderMemberInfo: this.getGroupMemberInfo.bind(this, event.group_id, event.sender.user_id),
       message: this.#transformOneBotMessage(event.message),
       group: this.#buildGroup(event.group_id, event.group_name || ''),

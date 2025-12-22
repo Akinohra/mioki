@@ -120,7 +120,7 @@ ctx.handle('message.group', async (e) => {
   await e.delEssence()            // 取消精华
 
   // 获取引用消息
-  const quoteMsg = await e.getQuoteMessage()
+  const quoteMsg = await e.getQuoteMsg()
 })
 ```
 

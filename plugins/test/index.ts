@@ -28,7 +28,7 @@ export default definePlugin({
       // e.recall()
       // e.setEssence()
       // e.addReaction('66')
-      // const quoteMsg = await e.getQuoteMessage()
+      // const quoteMsg = await e.getQuoteMsg()
       // const text = await ctx.getQuoteText(e)
       // const { uin, pskey, skey, bkn, gtk, cookie } = await ctx.getCookie('qzone.qq.com')
     })

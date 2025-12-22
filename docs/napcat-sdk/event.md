@@ -141,7 +141,7 @@ napcat.on('message.private', (event) => {
 | `sender` | `object` | 发送者信息 |
 | `friend` | `Friend` | 好友对象 |
 | `reply` | `function` | 回复消息函数 |
-| `getQuoteMessage` | `function` | 获取引用的消息 |
+| `getQuoteMsg` | `function` | 获取引用的消息 |
 
 ### message.private.friend
 

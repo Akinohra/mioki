@@ -27,7 +27,7 @@ napcat.on('message.group', async (e) => {
   }
 
   if (e.quote_id) {
-    const quotedMessage = await e.getQuoteMessage()
+    const quotedMessage = await e.getQuoteMsg()
     console.log('Quoted message content:', quotedMessage)
   }
 

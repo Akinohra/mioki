@@ -171,7 +171,7 @@ interface CliOptions {
         // 调用消息实例上挂载的快速方法
         // e.reply('这是群消息的回复') // 回复消息
         // e.recall() // 撤回消息
-        // e.getQuoteMessage() // 获取引用的消息
+        // e.getQuoteMsg() // 获取引用的消息
         // e.group.getInfo(); // 也可以通过群消息事件获取群实例，并调用群实例方法获取群信息
       })
 
