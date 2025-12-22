@@ -192,7 +192,7 @@ export class NapCat {
         if (data.retcode === 0) {
           resolve(data.data as T)
         } else {
-          reject(`API 错误：${data.message}`)
+          reject(`API 错误: ${data.message}`)
         }
       }
 
@@ -299,14 +299,14 @@ export class NapCat {
     if (data.post_type) {
       switch (data.post_type) {
         case 'meta_event': {
-          this.logger.trace(`收到 meta_event：${JSON.stringify(data)}`)
+          this.logger.trace(`收到 meta_event: ${JSON.stringify(data)}`)
 
           this.#event.emit('meta_event', data)
 
           if (data.meta_event_type) {
             this.#event.emit(`meta_event.${data.meta_event_type}`, data)
 
-            this.logger.trace('收到 meta_event_type：', data.meta_event_type)
+            this.logger.trace('收到 meta_event_type: ', data.meta_event_type)
 
             if (data.sub_type) {
               if (data.sub_type === 'connect') {
@@ -354,7 +354,7 @@ export class NapCat {
             case 'private': {
               this.#event.emit('message.private', data)
               this.#event.emit(`message.private.${data.sub_type}`, data)
-              this.logger.trace(`收到私聊消息：${JSON.stringify(data)}`)
+              this.logger.trace(`收到私聊消息: ${JSON.stringify(data)}`)
               this.logger.info(`[私:${sender}] ${msg}`)
               break
             }
@@ -362,13 +362,13 @@ export class NapCat {
             case 'group': {
               this.#event.emit('message.group', data)
               this.#event.emit(`message.group.${data.sub_type}`, data)
-              this.logger.trace(`收到群消息：${JSON.stringify(data)}`)
+              this.logger.trace(`收到群消息: ${JSON.stringify(data)}`)
               this.logger.info(`[群:${group}] ${sender}: ${msg}`)
               break
             }
 
             default: {
-              this.logger.debug(`收到未知消息类型：${JSON.stringify(data)}`)
+              this.logger.debug(`收到未知消息类型: ${JSON.stringify(data)}`)
 
               break
             }
@@ -387,7 +387,7 @@ export class NapCat {
           }
 
           this.#event.emit('message_sent', data)
-          this.logger.trace(`收到 message_sent：${JSON.stringify(data)}`)
+          this.logger.trace(`收到 message_sent: ${JSON.stringify(data)}`)
 
           if (data.message_type) {
             this.#event.emit(`message_sent.${data.message_type}`, data)
@@ -409,10 +409,10 @@ export class NapCat {
         }
 
         case 'notice': {
-          this.logger.trace(`收到通知：${JSON.stringify(data)}`)
+          this.logger.trace(`收到通知: ${JSON.stringify(data)}`)
 
           if (!data.notice_type) {
-            this.logger.debug(`收到未知通知类型：${JSON.stringify(data)}`)
+            this.logger.debug(`收到未知通知类型: ${JSON.stringify(data)}`)
             break
           }
 
@@ -454,7 +454,7 @@ export class NapCat {
         }
 
         case 'request': {
-          this.logger.trace(`收到请求：${JSON.stringify(data)}`)
+          this.logger.trace(`收到请求: ${JSON.stringify(data)}`)
 
           if (data.request_type === 'friend') {
             data.reject = (reason?: string) =>
@@ -481,7 +481,7 @@ export class NapCat {
         }
 
         default: {
-          this.logger.debug(`收到：${JSON.stringify(data)}`)
+          this.logger.debug(`收到: ${JSON.stringify(data)}`)
           this.#event.emit(data.post_type, data)
           return
         }
@@ -525,7 +525,7 @@ export class NapCat {
       const groupInfo = await this.api<ReturnType<Group['getInfo']>>('get_group_info', { group_id })
       return this.#buildGroup(group_id, groupInfo.group_name, groupInfo)
     } catch (err: any) {
-      this.logger.warn(`获取群 ${group_id} 信息失败：${err?.message || err}`)
+      this.logger.warn(`获取群 ${group_id} 信息失败: ${err?.message || err}`)
       return null
     }
   }
@@ -536,7 +536,7 @@ export class NapCat {
       const friendInfo = await this.api<ReturnType<Friend['getInfo']>>('get_stranger_info', { user_id })
       return this.#buildFriend(user_id, friendInfo.nickname, friendInfo)
     } catch (err: any) {
-      this.logger.warn(`获取好友 ${user_id} 信息失败：${err?.message || err}`)
+      this.logger.warn(`获取好友 ${user_id} 信息失败: ${err?.message || err}`)
       // return this.#buildFriend(user_id, '', {}) as FriendWithInfo
       return this.#buildFriend(user_id, '-', {}) as FriendWithInfo
     }
@@ -551,19 +551,19 @@ export class NapCat {
       this.#event.off(type, onceHandler)
     }
 
-    this.logger.debug(`注册一次性监听器：${String(type)}`)
+    this.logger.debug(`注册一次性监听器: ${String(type)}`)
     this.#event.on(type, onceHandler)
   }
 
   /**
    * 注册事件监听器，支持主类型或者点分子类型
    *
-   * 如： `notice`、`message.private`、`request.group.invite` 等
+   * 如:  `notice`、`message.private`、`request.group.invite` 等
    *
    * 如果需要移除监听器，请调用 `off` 方法
    */
   on<T extends keyof EventMap>(type: T, handler: (event: EventMap[NoInfer<T>]) => void): void {
-    this.logger.debug(`注册监听器：${String(type)}`)
+    this.logger.debug(`注册监听器: ${String(type)}`)
     this.#event.on(type, handler)
   }
 
@@ -571,7 +571,7 @@ export class NapCat {
    * 移除事件监听器
    */
   off<T extends keyof EventMap>(type: T, handler: (event: EventMap[NoInfer<T>]) => void): void {
-    this.logger.debug(`移除监听器：${String(type)}`)
+    this.logger.debug(`移除监听器: ${String(type)}`)
     this.#event.off(type, handler)
   }
 
@@ -580,7 +580,7 @@ export class NapCat {
    */
   api<T extends any>(action: API | (string & {}), params: Record<string, any> = {}): Promise<T> {
     this.#ensureWsConnection(this.#ws)
-    this.logger.debug(`调用 API：${action}，参数：${JSON.stringify(params)}`)
+    this.logger.debug(`调用 API: ${action}，参数: ${JSON.stringify(params)}`)
     const echo = this.#echoId()
     this.#ws.send(JSON.stringify({ echo, action, params }))
     return this.#waitForAction<T>(echo)
@@ -857,7 +857,7 @@ export class NapCat {
   async run(): Promise<void> {
     const { logger: _, token: __, ...config } = this.#config
 
-    this.logger.debug(`启动配置：${JSON.stringify(config)}`)
+    this.logger.debug(`启动配置: ${JSON.stringify(config)}`)
 
     return new Promise<void>((resolve, reject) => {
       const ws = new WebSocket(this.#buildWsUrl())
@@ -872,7 +872,7 @@ export class NapCat {
         })() as any
 
         if (!data) {
-          this.logger.debug(`收到非 JSON 消息：${event.data}`)
+          this.logger.debug(`收到非 JSON 消息: ${event.data}`)
           return
         }
 
@@ -888,7 +888,7 @@ export class NapCat {
 
       ws.onerror = (error) => {
         this.#online = false
-        this.logger.debug(`WebSocket 发生错误：${error}`)
+        this.logger.debug(`WebSocket 发生错误: ${error}`)
         this.#event.emit('ws.error', error)
         reject(error)
       }
