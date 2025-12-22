@@ -17,8 +17,23 @@ export const segment = {
   /** 创建一个回复消息片段 */
   reply: (id: string): SendElement => createSegment('reply', { id }),
   /** 创建一个图片消息片段 */
-  image: (file: string, options?: Omit<ExtractByType<SendElement, 'image'>, 'type' | 'file'>): SendElement =>
-    createSegment('image', { file, ...options }),
+  image: (
+    file: string | Buffer,
+    options?: Omit<ExtractByType<SendElement, 'image'>, 'type' | 'file'> & { local?: boolean },
+  ): SendElement => {
+    const isLocal = options?.local ?? false
+
+    const fileValue =
+      file instanceof Buffer
+        ? `base64://${file.toString('base64')}`
+        : typeof file === 'string'
+          ? isLocal
+            ? `file:///${file.replace(/^\s*(file:\/\/\/)+/, '')}`
+            : file
+          : file
+
+    return createSegment('image', { file: fileValue, ...options })
+  },
   /** 创建一个语音消息片段 */
   record: (file: string, options?: Omit<ExtractByType<SendElement, 'record'>, 'type' | 'file'>): SendElement =>
     createSegment('record', { file, ...options }),

@@ -960,3 +960,14 @@ export async function getTerminalInput(inputTip = '请输入'): Promise<string> 
  * 当前 Node.js 进程的启动时间，常量，Date 类型
  */
 export const START_TIME: Date = new Date()
+
+/**
+ * 计算 GTK 值
+ */
+export function getGTk(pskey: string): number {
+  let gkt = 5381
+  for (let i = 0, len = pskey.length; i < len; ++i) {
+    gkt += (gkt << 5) + pskey.charCodeAt(i)
+  }
+  return gkt & 0x7fffffff
+}
