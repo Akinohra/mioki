@@ -526,10 +526,10 @@ export type MetaEvent = HeartbeatMetaEvent | LifecycleMetaEvent
 // ==================== 辅助函数类型 ====================
 
 /** 回复消息的函数类型 */
-type Reply = (sendable: Sendable | Sendable[], reply?: boolean) => Promise<{ message_id: number }>
+type Reply = (sendable: Arrayable<Sendable>, reply?: boolean) => Promise<{ message_id: number }>
 
 /** 发送消息的函数类型 */
-type SendMsg = (sendable: Sendable | Sendable[]) => Promise<{ message_id: number }>
+type SendMsg = (sendable: Arrayable<Sendable>) => Promise<{ message_id: number }>
 
 /** 消息表态操作的函数类型 */
 type ReactionAction = (id: string) => Promise<void>

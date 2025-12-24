@@ -174,16 +174,16 @@ napcat.off('message', handler)
 ```ts
 napcat.sendGroupMsg(
   group_id: number,
-  sendable: Sendable | Sendable[]
+  sendable: Arrayable<Sendable>
 ): Promise<{ message_id: number }>
 ```
 
 **参数：**
 
-| 参数 | 类型 | 说明 |
-| --- | --- | --- |
-| `group_id` | `number` | 群号 |
-| `sendable` | `Sendable \| Sendable[]` | 消息内容 |
+| 参数       | 类型                  | 说明     |
+| ---------- | --------------------- | -------- |
+| `group_id` | `number`              | 群号     |
+| `sendable` | `Arrayable<Sendable>` | 消息内容 |
 
 **示例：**
 
@@ -205,16 +205,16 @@ await napcat.sendGroupMsg(123456789, [
 ```ts
 napcat.sendPrivateMsg(
   user_id: number,
-  sendable: Sendable | Sendable[]
+  sendable: Arrayable<Sendable>
 ): Promise<{ message_id: number }>
 ```
 
 **参数：**
 
-| 参数 | 类型 | 说明 |
-| --- | --- | --- |
-| `user_id` | `number` | 对方 QQ 号 |
-| `sendable` | `Sendable \| Sendable[]` | 消息内容 |
+| 参数       | 类型                  | 说明       |
+| ---------- | --------------------- | ---------- |
+| `user_id`  | `number`              | 对方 QQ 号 |
+| `sendable` | `Arrayable<Sendable>` | 消息内容   |
 
 **示例：**
 
@@ -232,10 +232,10 @@ napcat.sendLike(user_id: number, times?: number): Promise<void>
 
 **参数：**
 
-| 参数 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `user_id` | `number` | - | 对方 QQ 号 |
-| `times` | `number` | 1 | 点赞次数（1-10） |
+| 参数      | 类型     | 默认值 | 说明             |
+| --------- | -------- | ------ | ---------------- |
+| `user_id` | `number` | -      | 对方 QQ 号       |
+| `times`   | `number` | 1      | 点赞次数（1-10） |
 
 **示例：**
 
@@ -288,10 +288,10 @@ napcat.addReaction(message_id: number, emoji_id: string): Promise<void>
 
 **参数：**
 
-| 参数 | 类型 | 说明 |
-| --- | --- | --- |
+| 参数         | 类型     | 说明    |
+| ------------ | -------- | ------- |
 | `message_id` | `number` | 消息 ID |
-| `emoji_id` | `string` | 表情 ID |
+| `emoji_id`   | `string` | 表情 ID |
 
 **示例：**
 
@@ -335,19 +335,19 @@ napcat.pickGroup(group_id: number): Promise<GroupWithInfo | null>
 
 **返回的群对象包含以下方法：**
 
-| 方法 | 说明 |
-| --- | --- |
-| `sendMsg(msg)` | 发送群消息 |
-| `getInfo()` | 获取群信息 |
-| `getMemberList()` | 获取群成员列表 |
-| `getMemberInfo(user_id)` | 获取群成员信息 |
-| `setCard(user_id, card)` | 设置群名片 |
-| `setTitle(user_id, title)` | 设置群头衔 |
-| `ban(user_id, duration)` | 禁言成员 |
-| `sign()` | 群签到 |
-| `recall(message_id)` | 撤回消息 |
-| `setEssence(message_id)` | 设置精华 |
-| `delEssence(message_id)` | 移除精华 |
+| 方法                       | 说明           |
+| -------------------------- | -------------- |
+| `sendMsg(msg)`             | 发送群消息     |
+| `getInfo()`                | 获取群信息     |
+| `getMemberList()`          | 获取群成员列表 |
+| `getMemberInfo(user_id)`   | 获取群成员信息 |
+| `setCard(user_id, card)`   | 设置群名片     |
+| `setTitle(user_id, title)` | 设置群头衔     |
+| `ban(user_id, duration)`   | 禁言成员       |
+| `sign()`                   | 群签到         |
+| `recall(message_id)`       | 撤回消息       |
+| `setEssence(message_id)`   | 设置精华       |
+| `delEssence(message_id)`   | 移除精华       |
 
 **示例：**
 
@@ -402,10 +402,10 @@ napcat.setGroupBan(group_id: number, user_id: number, duration: number): Promise
 
 **参数：**
 
-| 参数 | 类型 | 说明 |
-| --- | --- | --- |
-| `group_id` | `number` | 群号 |
-| `user_id` | `number` | 成员 QQ 号 |
+| 参数       | 类型     | 说明                           |
+| ---------- | -------- | ------------------------------ |
+| `group_id` | `number` | 群号                           |
+| `user_id`  | `number` | 成员 QQ 号                     |
 | `duration` | `number` | 禁言时长（秒），0 表示解除禁言 |
 
 ### setGroupCard()
@@ -444,11 +444,11 @@ napcat.pickFriend(user_id: number): Promise<FriendWithInfo | null>
 
 **返回的好友对象包含以下方法：**
 
-| 方法 | 说明 |
-| --- | --- |
-| `sendMsg(msg)` | 发送私聊消息 |
-| `getInfo()` | 获取好友详细信息 |
-| `delete(block?, both?)` | 删除好友 |
+| 方法                    | 说明             |
+| ----------------------- | ---------------- |
+| `sendMsg(msg)`          | 发送私聊消息     |
+| `getInfo()`             | 获取好友详细信息 |
+| `delete(block?, both?)` | 删除好友         |
 
 **示例：**
 
@@ -487,11 +487,11 @@ napcat.deleteFriend(user_id: number, block?: boolean, both?: boolean): Promise<v
 
 **参数：**
 
-| 参数 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `user_id` | `number` | - | 好友 QQ 号 |
-| `block` | `boolean` | `false` | 是否拉黑 |
-| `both` | `boolean` | `false` | 是否双向删除 |
+| 参数      | 类型      | 默认值  | 说明         |
+| --------- | --------- | ------- | ------------ |
+| `user_id` | `number`  | -       | 好友 QQ 号   |
+| `block`   | `boolean` | `false` | 是否拉黑     |
+| `both`    | `boolean` | `false` | 是否双向删除 |
 
 ## Cookie 相关 {#cookie}
 

@@ -2,9 +2,12 @@ import { version } from '../../../package.json' with { type: 'json' }
 import { getMiokiStatus, formatMiokiStatus, type MiokiStatus } from './status'
 import { definePlugin, enablePlugin, findLocalPlugins, getAbsPluginDir, runtimePlugins } from '../..'
 
-import type { MiokiPlugin } from '../..'
+import type { Sendable } from 'napcat-sdk'
+import type { Arrayable, Awaitable, MiokiPlugin } from '../..'
 
-const corePlugins = ['mioki-core']
+export const CORE_PLUGINS = ['mioki-core']
+export type StatusFormatter = (status: MiokiStatus) => Awaitable<Arrayable<Sendable>>
+export * from './status'
 
 export interface MiokiCoreServiceContrib {
   /** 获取框架和系统的实时状态 */
@@ -12,7 +15,7 @@ export interface MiokiCoreServiceContrib {
   /** 格式化框架状态字符串 */
   formatMiokiStatus(status: MiokiStatus): Promise<string>
   /** 自定义框架状态格式化函数 */
-  customFormatMiokiStatus(formatter: (status: MiokiStatus) => string | Promise<string>): void
+  customFormatMiokiStatus(formatter: StatusFormatter): void
 }
 
 const core: MiokiPlugin = definePlugin({
@@ -26,13 +29,11 @@ const core: MiokiPlugin = definePlugin({
     const displayPrefix = prefix.replace(/\\\\/g, '\\')
     const statusAdminOnly = ctx.botConfig.status_permission === 'admin-only'
 
-    let statusFormatter = (status: MiokiStatus): string | Promise<string> => formatMiokiStatus(status)
+    let statusFormatter = (status: MiokiStatus): Awaitable<Arrayable<Sendable>> => formatMiokiStatus(status)
 
     ctx.addService('getMiokiStatus', () => getMiokiStatus(ctx.bot))
-    ctx.addService('formatMiokiStatus', formatMiokiStatus)
-    ctx.addService('customFormatMiokiStatus', (formatter: (status: MiokiStatus) => string | Promise<string>) => {
-      statusFormatter = formatter
-    })
+    ctx.addService('formatMiokiStatus', (status: MiokiStatus) => formatMiokiStatus(status))
+    ctx.addService('customFormatMiokiStatus', (formatter: StatusFormatter) => (statusFormatter = formatter))
 
     ctx.handle('message', (e) =>
       ctx.runWithErrorHandler(async () => {
@@ -44,7 +45,7 @@ const core: MiokiPlugin = definePlugin({
 
         if (text.replace(cmdPrefix, '') === '状态') {
           const status = await statusFormatter(await getMiokiStatus(ctx.bot))
-          await e.reply(`〓 🟢 mioki 状态 〓\n${status}`.trim())
+          await e.reply(status)
           return
         }
 
@@ -76,7 +77,7 @@ const core: MiokiPlugin = definePlugin({
           }
 
           case '插件': {
-            if (corePlugins.includes(target)) {
+            if (CORE_PLUGINS.includes(target)) {
               await e.reply('内置插件无法操作', true)
               return
             }

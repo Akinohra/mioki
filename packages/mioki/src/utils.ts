@@ -2,11 +2,11 @@ import mri from 'mri'
 import path from 'node:path'
 import crypto from 'node:crypto'
 import { Low } from 'lowdb'
+import { segment } from 'napcat-sdk'
 import { DataFile } from 'lowdb/node'
 import { createJiti, type Jiti } from 'jiti'
 import { string2argv } from 'string2argv'
 import { fileURLToPath } from 'node:url'
-import { segment } from 'napcat-sdk'
 
 export { default as prettyMs } from 'pretty-ms'
 
@@ -36,6 +36,7 @@ export type Noop = () => void
 export type AnyFunc = (...args: any[]) => any
 export type PureObject<T = any> = Record<PropertyKey, T>
 export type Arrayable<T> = T | T[]
+export type Awaitable<T> = T | Promise<T>
 export type Gettable<T> = T | (() => T)
 export type HasMessage = { message: RecvElement[] } | RecvElement[]
 
@@ -181,7 +182,7 @@ export function formatDuration(ms: number): string {
   return `${seconds}秒`
 }
 
-type MatchPatternItem = null | undefined | void | false | Sendable | Sendable[]
+type MatchPatternItem = null | undefined | void | false | Arrayable<Sendable>
 type MatchValue<E extends MessageEvent> =
   | MatchPatternItem
   | ((matches: RegExpMatchArray, event: E) => MatchPatternItem)

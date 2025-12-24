@@ -146,7 +146,7 @@ export class NapCat {
   }
 
   /** 包装回复消息 */
-  #wrapReply(sendable: Sendable | Sendable[], message_id?: number, reply?: boolean): Sendable[] {
+  #wrapReply(sendable: Arrayable<Sendable>, message_id?: number, reply?: boolean): Sendable[] {
     const sendableList = typeof sendable === 'string' ? [sendable] : [sendable].flat()
 
     if (reply && message_id) {
@@ -170,7 +170,7 @@ export class NapCat {
   }
 
   /** 标准化可发送消息元素 */
-  normalizeSendable(msg: Sendable | Sendable[]): NormalizedElementToSend[] {
+  normalizeSendable(msg: Arrayable<Sendable>): NormalizedElementToSend[] {
     return [msg].flat(2).map((item) => {
       if (typeof item === 'string') {
         return { type: 'text', data: { text: item } }
@@ -263,7 +263,7 @@ export class NapCat {
       getQuoteMsg: () => this.getMsg(quote_id) as Promise<PrivateMessageEvent | null>,
       message: this.#transformOneBotMessage(event.message),
       friend: this.#buildFriend(target.user_id, target.nickname),
-      reply: (sendable: Sendable | Sendable[], reply = false) =>
+      reply: (sendable: Arrayable<Sendable>, reply = false) =>
         this.sendPrivateMsg(target.user_id, this.#wrapReply(sendable, event.message_id, reply)),
     }
   }
@@ -288,7 +288,7 @@ export class NapCat {
       delReaction: this.delReaction.bind(this, event.message_id),
       setEssence: this.setEssenceMsg.bind(this, event.message_id),
       delEssence: this.deleteEssenceMsg.bind(this, event.message_id),
-      reply: (sendable: Sendable | Sendable[], reply = false) =>
+      reply: (sendable: Arrayable<Sendable>, reply = false) =>
         this.sendGroupMsg(event.group_id, this.#wrapReply(sendable, event.message_id, reply)),
     }
   }
@@ -691,7 +691,7 @@ export class NapCat {
   /**
    * 发送私聊消息
    */
-  sendPrivateMsg(user_id: number, sendable: Sendable | Sendable[]): Promise<{ message_id: number }> {
+  sendPrivateMsg(user_id: number, sendable: Arrayable<Sendable>): Promise<{ message_id: number }> {
     return this.api<{ message_id: number }>('send_private_msg', {
       user_id,
       message: this.normalizeSendable(sendable),
@@ -701,7 +701,7 @@ export class NapCat {
   /**
    * 发送群消息
    */
-  sendGroupMsg(group_id: number, sendable: Sendable | Sendable[]): Promise<{ message_id: number }> {
+  sendGroupMsg(group_id: number, sendable: Arrayable<Sendable>): Promise<{ message_id: number }> {
     return this.api<{ message_id: number }>('send_group_msg', {
       group_id,
       message: this.normalizeSendable(sendable),

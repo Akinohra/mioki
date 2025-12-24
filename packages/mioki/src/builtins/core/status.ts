@@ -156,6 +156,7 @@ export async function formatMiokiStatus(status: MiokiStatus): Promise<string> {
   const diskDesc = `${disk.percent}%-${filesize(disk.used, { round: 1 })}/${filesize(disk.total, { round: 1 })}`
 
   return `
+〓 🟢 mioki 状态 〓
 👤 ${bot.nickname}
 🆔 ${bot.uin}
 📋 ${localNum(bot.friends)} 好友 / ${localNum(bot.groups)} 群

@@ -12,9 +12,9 @@ const napcat = new NapCat({
   },
 })
 
-const off = napcat.on('message.group', async () => {})
+const _off = napcat.on('message.group', async () => {})
 
 await napcat.run()
 
-// off()
+// _off()
 // napcat.close()
