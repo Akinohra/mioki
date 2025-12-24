@@ -269,7 +269,7 @@ ctx.isOwnerOrAdmin(user_id: number): boolean
 
 ### ctx.match()
 
-关键词匹配并自动回复。
+关键词匹配并自动回复，支持精确匹配、正则表达式和通配符。
 
 ```ts
 ctx.match(
@@ -284,32 +284,159 @@ ctx.match(
 | 参数 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `event` | `MessageEvent` | - | 消息事件 |
-| `pattern` | `object` | - | 匹配模式 |
+| `pattern` | `object` | - | 匹配模式对象 |
 | `quote` | `boolean` | `true` | 是否引用回复 |
 
-**示例：**
+**MatchPattern 类型：**
+
+```ts
+type MatchPattern =
+  | Sendable                                              // 直接回复的消息
+  | null | undefined | false                              // 不回复
+  | ((matches: RegExpMatchArray, event: E) => Sendable)   // 同步回调
+  | ((matches: RegExpMatchArray, event: E) => Promise<Sendable>) // 异步回调
+```
+
+#### 匹配模式 {#match-patterns}
+
+| 模式 | 语法 | 说明 |
+| --- | --- | --- |
+| 精确匹配 | `"关键词"` | 消息内容完全等于关键词时触发 |
+| 正则匹配 | `"/正则表达式/"` | 以 `/` 包裹的正则表达式 |
+| 通配符匹配 | `"前缀*后缀"` | 使用 `*` 匹配任意字符 |
+
+#### 基础示例 {#match-basic}
 
 ```ts
 ctx.handle('message', (e) => {
   ctx.match(e, {
-    // 字符串匹配 -> 直接回复
+    // ===== 精确匹配 =====
     ping: 'pong',
-    hello: 'world',
+    你好: '你好呀~',
 
-    // 函数匹配 -> 动态回复
+    // ===== 函数回复 =====
     时间: () => new Date().toLocaleString(),
 
-    // 异步函数
+    // ===== 异步函数 =====
     天气: async () => {
       const weather = await fetchWeather()
       return `今日天气：${weather}`
     },
 
-    // 返回 null/undefined/false 则不回复
+    // ===== 返回 null/undefined/false 则不回复 =====
     test: () => null,
   })
 })
 ```
+
+#### 正则表达式匹配 {#match-regex}
+
+使用 `/正则表达式/` 格式的字符串进行正则匹配，回调函数可以获取匹配组：
+
+```ts
+ctx.handle('message', (e) => {
+  ctx.match(e, {
+    // 匹配 "计算 1+2" 格式
+    '/计算\\s*(\\d+)\\s*\\+\\s*(\\d+)/': (matches) => {
+      const [, a, b] = matches
+      return `${a} + ${b} = ${Number(a) + Number(b)}`
+    },
+
+    // 匹配任意数字
+    '/^\\d+$/': (matches) => `你输入了数字: ${matches[0]}`,
+
+    // 匹配 "翻译 xxx" 并获取内容
+    '/^翻译\\s+(.+)$/': async (matches, event) => {
+      const text = matches[1]
+      const result = await translateText(text)
+      return `翻译结果: ${result}`
+    },
+
+    // 匹配 "搜索 xxx 第n页"
+    '/搜索\\s+(.+?)(?:\\s+第(\\d+)页)?$/': async (matches) => {
+      const [, keyword, page = '1'] = matches
+      const results = await search(keyword, Number(page))
+      return `搜索 "${keyword}" 第${page}页:\n${results}`
+    },
+  })
+})
+```
+
+#### 通配符匹配 {#match-wildcard}
+
+使用 `*` 作为通配符匹配任意字符：
+
+```ts
+ctx.handle('message', (e) => {
+  ctx.match(e, {
+    // 匹配以 "早安" 开头的消息
+    '早安*': '早安！今天也要元气满满哦~',
+
+    // 匹配以 "晚安" 结尾的消息
+    '*晚安': '晚安，好梦~',
+
+    // 匹配包含 "好看" 的消息
+    '*好看*': '确实很好看！',
+
+    // 匹配 "查询xxx余额" 格式
+    '查询*余额': async (matches, event) => {
+      const balance = await getBalance(event.user_id)
+      return `你的余额: ${balance}`
+    },
+  })
+})
+```
+
+#### 高级用法 {#match-advanced}
+
+```ts
+ctx.handle('message', (e) => {
+  ctx.match(e, {
+    // 使用 event 对象获取更多信息
+    '/^签到$/': async (matches, event) => {
+      const userId = event.user_id
+      const result = await doSignIn(userId)
+      return [
+        ctx.segment.at(userId),
+        ctx.segment.text(`\n签到成功！获得 ${result.points} 积分`)
+      ]
+    },
+
+    // 返回图片消息
+    '状态卡片': async () => {
+      const imageUrl = await renderStatusCard()
+      return ctx.segment.image(imageUrl)
+    },
+
+    // 返回组合消息
+    '/^抽卡$/': async (matches, event) => {
+      const card = await drawCard(event.user_id)
+      return [
+        ctx.segment.image(card.image),
+        ctx.segment.text(`\n恭喜获得: ${card.name} ⭐${card.rarity}`)
+      ]
+    },
+
+    // 根据条件决定是否回复
+    '管理员测试': (matches, event) => {
+      if (!ctx.isOwnerOrAdmin(event)) {
+        return null // 非管理员不回复
+      }
+      return '你是管理员！'
+    },
+  })
+})
+```
+
+::: tip 💡 匹配优先级
+匹配按照对象属性的定义顺序进行，第一个匹配成功的规则会触发回复并结束匹配。建议将更具体的规则放在前面。
+:::
+
+::: warning ⚠️ 注意事项
+- 正则表达式中的 `\` 需要双重转义，例如 `\\d` 匹配数字
+- 通配符 `*` 会被转换为 `.*`，匹配任意字符（包括空字符串）
+- 回调函数的 `matches` 参数在精确匹配时为 `null`
+:::
 
 ### ctx.text()
 
