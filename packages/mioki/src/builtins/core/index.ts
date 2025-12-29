@@ -57,7 +57,7 @@ const core: MiokiPlugin = definePlugin({
 
         const [subCmd, target, ..._subParams] = params
 
-        switch (cmd?.replace(/\s+/g, '')) {
+        switch (cmd?.replace(cmdPrefix, '')?.replace(/\s+/g, '')) {
           case '帮助': {
             await e.reply(
               ctx
