@@ -15,16 +15,12 @@
     ],
     "admins": [],
     "plugins": [
-      "扫码测试",
-      "like",
-      "qr-login",
-      "test",
-      "words"
+      "like"
     ],
     "log_level": "info",
     "plugins_dir": "../plugins",
     "online_push": true,
-    "error_push": false,
+    "error_push": true,
     "status_permission": "admin-only",
     "napcat": {
       "protocol": "ws",
